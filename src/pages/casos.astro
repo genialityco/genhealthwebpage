@@ -1,0 +1,97 @@
+---
+import { Image } from 'astro:assets';
+import Base from '@/layouts/Base.astro';
+import PageHero from '@/components/PageHero.astro';
+import Stats from '@/components/Stats.astro';
+import Marquee from '@/components/Marquee.astro';
+import CtaBand from '@/components/CtaBand.astro';
+import SectionHead from '@/components/SectionHead.astro';
+import { cases } from '@/data/cases';
+import { results2026, associations, industry } from '@/data/site';
+import { breadcrumbLd } from '@/lib/ld';
+
+const crumbs = [{ name: 'Inicio', href: '/' }, { name: 'Casos y resultados', href: '/casos/' }];
+const description = 'Casos de Gen.Health con ACN, ASCOFAME, CNQF, ACIS, COLFI, ACHO y ACE: congresos que superaron sus metas, audiencias médicas y estrategia digital.';
+const jsonLd = [
+  breadcrumbLd(crumbs, Astro.site!),
+  {
+    '@context': 'https://schema.org',
+    '@type': 'ItemList',
+    name: 'Casos de Gen.Health',
+    itemListElement: cases.map((c, i) => ({ '@type': 'ListItem', position: i + 1, name: `${c.client}: ${c.title}`, url: new URL(`/casos/#${c.slug}`, Astro.site).href })),
+  },
+];
+---
+<Base title="Casos y resultados" description={description} jsonLd={jsonLd} headerTone="dark">
+  <PageHero crumbs={crumbs} kicker="Resultados comprobables" index="06" name="Casos" title="Congresos, eventos y estrategias que superaron sus metas" lead="Cuatro maneras de medir el éxito: meta comercial, alcance, perfil de la audiencia e inscripciones. Todas las cifras vienen de los informes de cada proyecto." figure="lissajous" />
+
+  <section class="section">
+    <div class="wrap">
+      <SectionHead annot="Resultados 2026" title="Plataformas <span class='serif-em accent'>Gen.Live y Gen.Campus</span>" />
+      <Stats stats={results2026.stats} source={results2026.source} cols={3} />
+    </div>
+  </section>
+
+  <section class="section section--tight theme-paper2" aria-label="Casos">
+    <div class="wrap">
+      <ol class="clist">
+        {cases.map((c, i) => (
+          <li id={c.slug} class="case">
+            <div class="case-head">
+              <span class="t-mono soft">{String(i + 1).padStart(2, '0')} · {c.field}</span>
+              <h2 class="case-client" data-split>{c.client}</h2>
+              <p class="t-h3">{c.title}</p>
+              <ul class="case-svc">{c.services.map((s) => <li class="chip"><i></i>{s}</li>)}</ul>
+            </div>
+            <div class="case-body">
+              <p class="case-num" data-reveal>{c.headline.value}</p>
+              <p class="t-lead" data-reveal>{c.headline.label}</p>
+              <dl class="case-pts">
+                {c.points.map((p) => (
+                  <div data-reveal><dt>{p.value}</dt><dd>{p.label}</dd></div>
+                ))}
+              </dl>
+              <p class="t-body">{c.story}</p>
+              {c.image && (
+                <div class="frame case-img" data-reveal>
+                  <Image src={c.image.src} alt={c.image.alt} widths={[480, 900]} sizes="(min-width: 1000px) 40vw, 92vw" />
+                </div>
+              )}
+            </div>
+          </li>
+        ))}
+      </ol>
+      <p class="t-mono soft src">Fuentes: informes de resultados de cada proyecto. Sin cifras de dinero; los montos se conversan en reunión.</p>
+    </div>
+  </section>
+
+  <section class="section section--tight">
+    <div class="wrap"><p class="annot">Asociaciones médicas, colegios y academia</p></div>
+    <Marquee items={associations} label="Asociaciones y academia" />
+    <div class="wrap ind">
+      <p class="annot">Industria farmacéutica que ha participado en proyectos y espacios educativos</p>
+      <ul class="ind-list">{industry.map((n) => <li>{n}</li>)}</ul>
+      <p class="t-mono soft">Participación en proyectos y espacios educativos; no implica aval de Gen.Health.</p>
+    </div>
+  </section>
+
+  <CtaBand title="Su organización puede ser el próximo caso." />
+</Base>
+<style>
+  .clist { display: grid; }
+  .case { display: grid; gap: 28px; padding-block: clamp(48px, 7vw, 100px); border-top: 1px solid var(--line); scroll-margin-top: 90px; }
+  @media (min-width: 1000px) { .case { grid-template-columns: 5fr 7fr; gap: 64px; } .case-head { position: sticky; top: 110px; align-self: start; } }
+  .case-head { display: grid; gap: 14px; align-content: start; }
+  .case-client { font-weight: 820; font-size: clamp(4rem, 12vw, 11rem); letter-spacing: -0.07em; line-height: 0.82; }
+  .case-svc { display: flex; flex-wrap: wrap; gap: 8px; }
+  .case-body { display: grid; gap: 22px; align-content: start; }
+  .case-num { font-weight: 780; font-size: clamp(3.6rem, 9vw, 8.5rem); letter-spacing: -0.065em; line-height: 0.85; color: var(--leaf); }
+  .case-pts { display: grid; gap: 0; }
+  .case-pts div { display: grid; grid-template-columns: minmax(110px, 0.35fr) 1fr; gap: 16px; padding-block: 14px; border-top: 1px solid var(--line); align-items: baseline; }
+  .case-pts dt { font-weight: 740; font-size: 1.5rem; letter-spacing: -0.04em; }
+  .case-pts dd { margin: 0; color: var(--muted); }
+  .case-img { aspect-ratio: 16 / 10; max-width: 560px; }
+  .src { margin-top: 24px; text-transform: none; letter-spacing: 0.02em; }
+  .ind { display: grid; gap: 20px; margin-top: 56px; }
+  .ind-list { display: flex; flex-wrap: wrap; gap: 8px 28px; font-weight: 680; font-size: clamp(1.3rem, 2.4vw, 2.2rem); letter-spacing: -0.04em; }
+</style>

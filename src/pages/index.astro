@@ -1,0 +1,499 @@
+---
+import { Image } from 'astro:assets';
+import Base from '@/layouts/Base.astro';
+import Figure from '@/components/Figure.astro';
+import Marquee from '@/components/Marquee.astro';
+import Stats from '@/components/Stats.astro';
+import SectionHead from '@/components/SectionHead.astro';
+import BlobImage from '@/components/BlobImage.astro';
+import { site, associations, results2026, startHere, principles } from '@/data/site';
+import { pillars, productsOf, productUrl, genoma, gallery } from '@/data/catalog';
+import { cases } from '@/data/cases';
+
+const title = 'Gen.Health · Conocimiento médico con aval científico para asociaciones, industria e IPS';
+const description =
+  'Congresos médicos, educación médica continua, agentes de IA con aval científico (Gen.oma) y comunicación en salud para asociaciones médicas, farmacéuticas e IPS.';
+
+const jsonLd = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'WebSite',
+    name: site.name,
+    url: new URL('/', Astro.site).href,
+    inLanguage: 'es-CO',
+    publisher: { '@id': new URL('/#organizacion', Astro.site).href },
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'ItemList',
+    name: 'Frentes de Gen.Health',
+    itemListElement: pillars.map((p, i) => ({
+      '@type': 'ListItem',
+      position: i + 1,
+      name: p.name,
+      url: new URL(`/${p.slug}/`, Astro.site).href,
+    })),
+  },
+];
+
+const cycle = pillars;
+const experiences = [
+  { src: gallery.desafiando, alt: 'Pulmón virtual y celulares de la experiencia Desafiando el Cáncer', label: 'Desafiando el Cáncer', tag: 'Realizado · ACHO 2024' },
+  { src: gallery.salaPosters, alt: 'Sala de pósters digitales del congreso de ACHO', label: 'Gen.Pósters', tag: 'Sala de pósters · ACHO' },
+  { src: gallery.pepper, alt: 'Robot social Pepper saludando', label: 'Pepper', tag: 'Robótica social' },
+  { src: gallery.esmoversePantalla, alt: 'Pantalla gigante con una molécula de conexiones', label: 'ESMOverse', tag: 'Networking con IA' },
+  { src: gallery.pinkPulse, alt: 'Instalación luminosa The Pink Pulse', label: 'The Pink Pulse', tag: 'Experiencia biométrica' },
+  { src: gallery.campus, alt: 'Plataforma Gen.Campus en tres pantallas', label: 'Gen.Campus', tag: 'EndoCampus · ACE' },
+];
+const featured = cases.slice(0, 4);
+---
+<Base title={title} description={description} jsonLd={jsonLd} headerTone="dark">
+  <!-- ───────── HERO -->
+  <section class="hero theme-dark" data-hero>
+    <canvas class="hero-canvas" data-phyllo aria-hidden="true"></canvas>
+    <div class="hero-annots" aria-hidden="true">
+      <span class="annot ha-1">Fig. 01 · Filotaxis · θ = 137,508°</span>
+      <span class="annot ha-2">Taller de conocimiento · Bogotá 4,71° N</span>
+      <span class="annot ha-3">r = c√n</span>
+    </div>
+    <div class="wrap hero-in">
+      <p class="kicker hero-kicker" data-reveal><b>Gen.Health</b> Línea de salud de Geniality · Portafolio 2027</p>
+      <h1 class="t-mega hero-title" data-split="chars">
+        El saber<br />médico, <span class="serif-em accent">vivo.</span>
+      </h1>
+      <div class="hero-foot">
+        <p class="t-lead" data-reveal>
+          El aval científico de su asociación y su comunicación digital son hoy más importantes que nunca. Llevamos el conocimiento médico a más profesionales, con aval y con la tecnología de hoy.
+        </p>
+        <div class="hero-actions" data-reveal>
+          <a class="btn" href="#ciclo" data-magnetic>
+            Recorrer el ciclo
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M12 5v14M6 13l6 6 6-6" /></svg>
+          </a>
+          <a class="btn btn--ghost" href="/contacto/">Hablemos</a>
+        </div>
+      </div>
+    </div>
+    <div class="hero-scroll t-mono" aria-hidden="true"><span></span>Desplace</div>
+  </section>
+
+  <Marquee items={associations} label="Asociaciones médicas, colegios y academia que confían en Gen.Health" />
+
+  <!-- ───────── LO QUE CAMBIÓ -->
+  <section class="section cambio" aria-labelledby="cambio-t">
+    <div class="wrap">
+      <SectionHead
+        id="cambio-t"
+        annot="Lámina 02 · Lo que cambió"
+        title="El conocimiento de su asociación sigue siendo insustituible; <span class='serif-em accent'>lo que cambió es el camino para llegar a él.</span>"
+      />
+      <div class="paths" data-paths>
+        <div class="path-row">
+          <span class="t-mono soft path-when">Antes</span>
+          <ol class="path-nodes">
+            <li class="node solid">Asociación</li>
+            <li class="node solid">Conocimiento</li>
+            <li class="node solid">Afiliado</li>
+          </ol>
+        </div>
+        <div class="path-row">
+          <span class="t-mono soft path-when">Hoy</span>
+          <ol class="path-nodes">
+            <li class="node">Pregunta</li>
+            <li class="node">Google</li>
+            <li class="node">Redes</li>
+            <li class="node">IA general</li>
+            <li class="node question">¿Dónde queda el aval de la asociación?</li>
+          </ol>
+        </div>
+        <svg class="paths-curve" viewBox="0 0 1200 200" preserveAspectRatio="none" aria-hidden="true">
+          <path data-draw-scrub d="M10 150 C 200 20, 330 190, 520 110 S 860 10, 1000 90 S 1150 160, 1190 60" />
+        </svg>
+      </div>
+      <p class="cambio-answer t-display" data-split>
+        En <a href="/gen-oma/" class="accent link-u">Gen.oma</a>.
+      </p>
+    </div>
+  </section>
+
+  <!-- ───────── VALOR PARA CADA ACTOR -->
+  <section class="section section--tight theme-paper2 actors" aria-labelledby="actors-t">
+    <div class="wrap">
+      <h2 id="actors-t" class="sr-only">Valor para cada actor</h2>
+      <div class="actors-grid">
+        {[
+          { who: 'Asociación o colegio', what: 'Nuevos ingresos más allá de las cuotas, vigencia digital todo el año y operación delegada en un equipo experto.', fig: 'flower' as const },
+          { who: 'Industria farmacéutica', what: 'Patrocinios educativos con aval científico declarado y reportes verificables de alcance, perfil médico y retención del aprendizaje.', fig: 'lissajous' as const },
+          { who: 'Médico, clínica e IPS', what: 'Educación continua que cabe en su agenda, consulta de guías en segundos y herramientas de teleexperticia normativa.', fig: 'vesica' as const },
+        ].map((a, i) => (
+          <article class="actor" data-reveal>
+            <div class="actor-fig"><Figure kind={a.fig} annotate={false} /></div>
+            <p class="t-mono accent">0{i + 1}</p>
+            <h3 class="t-h3">{a.who}</h3>
+            <p class="t-body">{a.what}</p>
+          </article>
+        ))}
+      </div>
+      <p class="pact" data-reveal>
+        La industria patrocina con transparencia <i>·</i> La asociación avala y decide <i>·</i> El médico aprende y aplica <i>·</i> <b>Gen.Health opera y mide.</b>
+      </p>
+    </div>
+  </section>
+
+  <!-- ───────── CICLO DEL CONOCIMIENTO (pin) -->
+  <section class="ciclo theme-dark" id="ciclo" aria-labelledby="ciclo-t" data-cycle>
+    <div class="ciclo-stage">
+      <div class="wrap ciclo-head">
+        <p class="annot">Lámina 03 · Del congreso a la consulta</p>
+        <h2 id="ciclo-t" class="t-h2" data-split>Cinco maneras de acompañar <span class="serif-em accent">a su organización</span></h2>
+      </div>
+      <div class="ciclo-body wrap">
+        <div class="orbit" aria-hidden="true">
+          <svg viewBox="-520 -520 1040 1040" class="orbit-svg">
+            <circle class="o-ring" r="440" />
+            <circle class="o-ring thin" r="470" />
+            <circle class="o-ring thin" r="300" />
+            <g class="o-ticks">
+              {Array.from({ length: 72 }, (_, i) => (
+                <line x1="0" y1={-440} x2="0" y2={i % 6 ? -430 : -418} transform={`rotate(${i * 5})`} />
+              ))}
+            </g>
+            <g class="o-rotor" data-rotor>
+              {cycle.map((p, i) => {
+                const a = (i / cycle.length) * Math.PI * 2 - Math.PI / 2;
+                const x = Math.cos(a) * 440, y = Math.sin(a) * 440;
+                return (
+                  <g class="o-node" data-node={i} transform={`translate(${x.toFixed(1)} ${y.toFixed(1)})`}>
+                    <circle r="34" />
+                    <text text-anchor="middle" dy="6">{p.index}</text>
+                  </g>
+                );
+              })}
+            </g>
+            <g class="o-core">
+              <circle r="150" class="core-ring" />
+              <circle r="118" class="core-fill" />
+              <text text-anchor="middle" dy="-6" class="core-t">Gen.oma</text>
+              <text text-anchor="middle" dy="26" class="core-s">el conocimiento, en el centro</text>
+            </g>
+          </svg>
+        </div>
+        <ol class="ciclo-panels">
+          {cycle.map((p, i) => (
+            <li class="cpanel" data-panel={i}>
+              <p class="t-mono accent">{p.index} · {p.verb}</p>
+              <h3 class="cpanel-name">{p.name}</h3>
+              <p class="t-body">{p.lead}</p>
+              <ul class="cpanel-list">
+                {productsOf(p.slug).map((x) => <li><a class="link-u" href={productUrl(x)}>{x.name}</a></li>)}
+              </ul>
+              <a class="btn btn--ghost cpanel-cta" href={`/${p.slug}/`}>Explorar {p.name}</a>
+            </li>
+          ))}
+        </ol>
+      </div>
+      <p class="wrap ciclo-loop t-mono soft">Lo que se aprende en la práctica vuelve a Gen.oma y enriquece el conocimiento de la asociación.</p>
+    </div>
+  </section>
+
+  <!-- ───────── GEN.OMA -->
+  <section class="section genoma theme-moss" aria-labelledby="genoma-t">
+    <div class="wrap grid">
+      <div class="genoma-fig" aria-hidden="true" data-speed="-0.12"><Figure kind="cell" number="04" spin /></div>
+      <div class="genoma-text">
+        <p class="annot">Lámina 04 · Donde se guarda</p>
+        <h2 id="genoma-t" class="t-display" data-split>Gen<span class="spark">.</span>oma</h2>
+        <p class="t-lead">Décadas de conocimiento de su especialidad, al alcance de cada médico. Agentes de IA que responden <em class="serif-em">solo</em> con las fuentes de su asociación.</p>
+        <div class="genoma-chips">
+          <span class="chip"><i></i>Agentes de IA</span>
+          <span class="chip"><i></i>RAG · responde con sus fuentes</span>
+          <span class="chip"><i></i>Privado · su propio servidor</span>
+        </div>
+        <div class="chat" data-reveal aria-label="Ejemplo ilustrativo de una consulta en Gen.oma">
+          <p class="chat-q"><span class="t-mono">Especialista</span>¿Cuál es la recomendación vigente de nuestra asociación para este escenario clínico?</p>
+          <p class="chat-a"><span class="t-mono">Gen.oma</span>Responde con el consenso de la asociación y cita la fuente exacta.<cite class="t-mono">Guía · año · página · aval del comité</cite></p>
+          <p class="t-mono soft chat-note">Ejemplo ilustrativo</p>
+        </div>
+        <ul class="genoma-mods">
+          {genoma.modules.map((m) => (
+            <li data-reveal><span class="chip" data-status={m.status}><i></i>{m.status}</span><h3>{m.title}</h3><p>{m.text}</p></li>
+          ))}
+        </ul>
+        <a class="btn" href="/gen-oma/" data-magnetic>Conocer Gen.oma
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" /></svg>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ───────── ARMONÓGRAFO -->
+  <section class="harmo" aria-labelledby="harmo-t" data-harmo-section>
+    <div class="harmo-stage">
+      <canvas class="harmo-canvas" data-harmo aria-hidden="true"></canvas>
+      <div class="wrap harmo-text">
+        <p class="annot">Principio físico · Péndulo amortiguado</p>
+        <h2 id="harmo-t" class="t-display" data-split>Cada evento deja un <span class="serif-em accent">trazo medible.</span></h2>
+        <p class="t-lead soft">Como un armonógrafo, cada simposio, curso y congreso dibuja una huella: quién se conectó, qué aprendió y cuánto retuvo. La medimos para la asociación y para sus patrocinadores.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ───────── RESULTADOS -->
+  <section class="section results" aria-labelledby="results-t">
+    <div class="wrap">
+      <SectionHead id="results-t" annot="Lámina 05 · Resultados 2026" title="Lo que hemos logrado <span class='serif-em accent'>juntos</span>" lead="Eventos científicos en vivo, profesionales únicos y membresías: cifras de nuestras plataformas en 2026." />
+      <Stats stats={results2026.stats} source={results2026.source} cols={3} />
+    </div>
+  </section>
+
+  <!-- ───────── EXPERIENCIAS (horizontal) -->
+  <section class="hscroll theme-dark" aria-labelledby="exp-t" data-hscroll>
+    <div class="hscroll-pin">
+      <div class="wrap hscroll-head">
+        <p class="annot">Lámina 06 · Donde se comparte</p>
+        <h2 id="exp-t" class="t-h2" data-split>Experiencias que se <span class="serif-em accent">viven y se recuerdan</span></h2>
+      </div>
+      <ul class="hscroll-track" data-track>
+        {experiences.map((e, i) => (
+          <li class="hcard">
+            <div class="frame hcard-img">
+              <Image src={e.src} alt={e.alt} widths={[480, 800, 1200]} sizes="(min-width: 1000px) 34vw, 80vw" loading="lazy" />
+            </div>
+            <div class="hcard-cap">
+              <span class="t-mono accent">{String(i + 1).padStart(2, '0')}</span>
+              <h3 class="t-h3">{e.label}</h3>
+              <p class="t-mono soft">{e.tag}</p>
+            </div>
+          </li>
+        ))}
+        <li class="hcard hcard--end">
+          <a href="/congresos-y-eventos/experiencias-interactivas/" class="hcard-more">
+            <span class="t-h2">Ver todas las experiencias</span>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" aria-hidden="true"><path d="M5 19L19 5M8 5h11v11" /></svg>
+          </a>
+        </li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ───────── CASOS -->
+  <section class="section casos" aria-labelledby="casos-t">
+    <div class="wrap">
+      <SectionHead id="casos-t" annot="Lámina 07 · Casos de congresos" title="Congresos que <span class='serif-em accent'>superaron sus metas</span>" />
+      <ol class="case-rows">
+        {featured.map((c) => (
+          <li class="case-row" data-reveal>
+            <a href={`/casos/#${c.slug}`} data-cursor="Ver caso">
+              <span class="t-mono soft cr-client">{c.client}</span>
+              <span class="cr-num">{c.headline.value}</span>
+              <span class="cr-label">{c.headline.label}</span>
+              <span class="cr-field t-mono soft">{c.field}</span>
+            </a>
+          </li>
+        ))}
+      </ol>
+      <a class="btn btn--ghost casos-more" href="/casos/">Todos los casos y resultados</a>
+    </div>
+  </section>
+
+  <!-- ───────── POR DÓNDE EMPEZAR -->
+  <section class="section section--tight theme-paper2 start" aria-labelledby="start-t" data-start>
+    <div class="wrap grid">
+      <div class="start-head">
+        <p class="annot">Lámina 08 · Cómo empezar</p>
+        <h2 id="start-t" class="t-h2" data-split>¿Por dónde le gustaría empezar?</h2>
+        <p class="t-body">Nadie tiene que comprarlo todo. Lo normal es empezar por un servicio que complemente lo que su organización ya hace bien.</p>
+        <div class="start-fig" aria-hidden="true"><Figure kind="spiral" number="08" /></div>
+      </div>
+      <ol class="start-list">
+        {startHere.map((s, i) => (
+          <li>
+            <a href={s.href} class="start-item" data-reveal>
+              <span class="t-mono soft">{String(i + 1).padStart(2, '0')}</span>
+              <span class="start-need">{s.need}</span>
+              <span class="start-answer t-mono">{s.answer} →</span>
+            </a>
+          </li>
+        ))}
+      </ol>
+    </div>
+  </section>
+
+  <!-- ───────── PRINCIPIOS -->
+  <section class="section principles" aria-labelledby="pr-t">
+    <div class="wrap">
+      <SectionHead id="pr-t" annot="Lámina 09 · Lo que siempre cuidamos" title="La IA apoya; <span class='serif-em accent'>el especialista decide.</span>" />
+      <ol class="pr-grid">
+        {principles.map((p, i) => (
+          <li class="pr" data-reveal>
+            <span class="pr-n">{i + 1}</span>
+            <h3 class="t-h3">{p.title}</h3>
+            <p class="t-body">{p.text}</p>
+          </li>
+        ))}
+      </ol>
+      <div class="pr-photo">
+        <BlobImage src={gallery.salaPosters} alt="Médicos conversando sobre su propia investigación en la sala de pósters de ACHO" caption="Lo que más disfrutamos: ver a los médicos conversar sobre su propia investigación. ACHO, 2024." ratio="16 / 9" seed={4} sizes="(min-width: 1000px) 70vw, 92vw" />
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  /* HERO */
+  .hero { position: relative; min-height: 100svh; display: flex; align-items: flex-end; overflow: hidden; padding: calc(var(--header-h) + 24px) 0 clamp(40px, 6vw, 80px); }
+  .hero-canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
+  .hero-in { position: relative; z-index: 1; display: grid; gap: clamp(20px, 3vw, 40px); pointer-events: none; }
+  .hero-in a, .hero-in button { pointer-events: auto; }
+  .hero-title { margin-left: -0.04em; }
+  .hero-foot { display: grid; gap: 28px; align-items: end; }
+  .hero-foot .t-lead { color: var(--fg-soft); max-width: 40ch; }
+  .hero-actions { display: flex; flex-wrap: wrap; gap: 12px; }
+  @media (min-width: 1000px) { .hero-foot { grid-template-columns: 1fr auto; } }
+  .hero-annots .annot { position: absolute; z-index: 1; }
+  .ha-1 { top: calc(var(--header-h) + 28px); left: var(--gutter); }
+  .ha-2 { top: calc(var(--header-h) + 28px); right: var(--gutter); display: none !important; }
+  .ha-3 { top: 46%; right: 8%; display: none !important; }
+  @media (min-width: 900px) { .ha-3 { display: inline-flex !important; } }
+  @media (min-width: 900px) { .ha-2 { display: inline-flex !important; } }
+  @media (max-height: 760px) { .ha-1, .ha-2 { display: none !important; } }
+  .hero-scroll { position: absolute; right: var(--gutter); bottom: 28px; display: none; align-items: center; gap: 10px; color: var(--fg-soft); writing-mode: vertical-rl; }
+  .hero-scroll span { width: 1px; height: 60px; background: linear-gradient(var(--chloro), transparent); animation: drip 2.2s var(--ease) infinite; }
+  @keyframes drip { from { transform: scaleY(0); transform-origin: top; } 50% { transform: scaleY(1); transform-origin: top; } 51% { transform-origin: bottom; } to { transform: scaleY(0); transform-origin: bottom; } }
+  @media (min-width: 900px) { .hero-scroll { display: flex; } }
+
+  /* CAMBIO */
+  .paths { position: relative; display: grid; gap: 28px; padding-block: 20px 40px; }
+  .path-row { display: grid; gap: 12px; position: relative; z-index: 1; }
+  @media (min-width: 900px) { .path-row { grid-template-columns: 120px 1fr; align-items: center; } }
+  .path-nodes { display: flex; flex-wrap: wrap; gap: 10px 8px; align-items: center; }
+  .path-nodes li + li::before { content: '→'; margin-right: 8px; color: var(--sepia); }
+  .node { display: inline-flex; align-items: center; font-weight: 600; font-size: clamp(1rem, 1.6vw, 1.35rem); }
+  .node { padding: 0; }
+  .node.solid { color: var(--moss); }
+  .node.question { padding: 8px 16px; border: 1.5px dashed var(--spark); border-radius: 999px; color: #a9500f; }
+  .paths-curve { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 0; opacity: 0.6; }
+  .paths-curve path { fill: none; stroke: var(--sepia); stroke-width: 1.2; vector-effect: non-scaling-stroke; }
+  .cambio-answer { margin-top: clamp(24px, 4vw, 56px); }
+
+  /* ACTORES */
+  .actors-grid { display: grid; gap: 16px; }
+  @media (min-width: 900px) { .actors-grid { grid-template-columns: repeat(3, 1fr); gap: 24px; } }
+  .actor { display: grid; gap: 14px; align-content: start; padding: 28px; background: var(--paper); border-radius: 6px; box-shadow: inset 0 0 0 1px var(--line); }
+  .actor-fig { width: 46%; aspect-ratio: 1; margin-bottom: 8px; }
+  .pact { margin-top: 32px; padding: 22px 28px; border-radius: 999px; background: var(--ink); color: #e9eedd; font-weight: 600; font-size: clamp(1rem, 1.5vw, 1.25rem); text-align: center; text-wrap: balance; }
+  .pact i { color: var(--spark); font-style: normal; margin-inline: 6px; }
+  .pact b { color: var(--chloro); }
+  @media (max-width: 700px) { .pact { border-radius: 18px; } }
+
+  /* CICLO */
+  .ciclo { position: relative; }
+  .ciclo-stage { min-height: 100svh; padding-block: calc(var(--header-h) + 20px) 40px; display: grid; grid-template-rows: auto 1fr auto; gap: 20px; }
+  .ciclo-head { display: grid; gap: 16px; }
+  .ciclo-body { display: grid; gap: 32px; align-items: center; }
+  .orbit { width: min(92vw, 560px); margin-inline: auto; }
+  .orbit-svg { width: 100%; height: auto; overflow: visible; }
+  .o-ring { fill: none; stroke: var(--rule); stroke-width: 1.4; }
+  .o-ring.thin { stroke: var(--construct); stroke-width: 0.8; stroke-dasharray: 2 8; opacity: 0.7; }
+  .o-ticks line { stroke: var(--construct); stroke-width: 1; opacity: 0.6; }
+  .o-node circle { fill: var(--ink); stroke: var(--chloro); stroke-width: 1.6; transition: fill 0.4s, r 0.4s; }
+  .o-node text { fill: var(--chloro); font-family: var(--f-mono); font-size: 20px; }
+  .o-node.is-on circle { fill: var(--chloro); }
+  .o-node.is-on text { fill: var(--ink); }
+  .core-ring { fill: none; stroke: var(--chloro); stroke-width: 1.2; stroke-dasharray: 4 6; }
+  .core-fill { fill: var(--moss); }
+  .core-t { fill: #eef3e2; font-family: var(--f-display); font-weight: 780; font-size: 46px; letter-spacing: -2px; }
+  .core-s { fill: var(--lichen); font-family: var(--f-mono); font-size: 14px; letter-spacing: 1px; text-transform: uppercase; }
+  .ciclo-panels { display: grid; gap: 40px; }
+  .cpanel { display: grid; gap: 14px; align-content: start; }
+  .cpanel-name { font-weight: 780; font-size: clamp(2.2rem, 5vw, 4.8rem); letter-spacing: -0.055em; line-height: 0.9; }
+  .cpanel-list { display: flex; flex-wrap: wrap; gap: 6px 18px; font-weight: 560; }
+  .cpanel-cta { justify-self: start; margin-top: 8px; }
+  .ciclo-loop { text-transform: none; letter-spacing: 0.02em; }
+  @media (min-width: 1000px) {
+    .ciclo-body { grid-template-columns: 1fr 1fr; }
+    .orbit { width: min(42vw, 620px); }
+    .ciclo-panels { display: block; position: relative; min-height: 420px; }
+    .cpanel { position: absolute; inset: 0; }
+    :global(.js) .cpanel:not(:first-child) { opacity: 0; visibility: hidden; }
+  }
+
+  /* GEN.OMA */
+  .genoma-fig { grid-column: 1 / -1; width: min(90vw, 560px); justify-self: center; }
+  .genoma-text { grid-column: 1 / -1; display: grid; gap: 24px; align-content: start; }
+  @media (min-width: 1000px) {
+    .genoma-fig { grid-column: 1 / span 6; position: sticky; top: 100px; align-self: start; width: 100%; }
+    .genoma-text { grid-column: 7 / -1; }
+  }
+  .genoma-text .t-display { font-size: clamp(4rem, 13vw, 12rem); }
+  .genoma-chips { display: flex; flex-wrap: wrap; gap: 8px; }
+  .chat { display: grid; gap: 12px; padding: 22px; border-radius: 8px; background: rgba(11, 34, 25, 0.35); box-shadow: inset 0 0 0 1px var(--rule); }
+  .chat p { display: grid; gap: 6px; max-width: 46ch; }
+  .chat-q { justify-self: end; text-align: right; padding: 14px 16px; border-radius: 14px 14px 2px 14px; background: rgba(238, 243, 226, 0.08); }
+  .chat-a { padding: 14px 16px; border-radius: 14px 14px 14px 2px; background: var(--chloro); color: var(--ink); }
+  .chat-a cite { font-style: normal; padding-top: 8px; border-top: 1px solid rgba(11, 34, 25, 0.25); }
+  .chat .t-mono { font-size: 0.66rem; opacity: 0.8; }
+  .chat-note { justify-self: end; }
+  .genoma-mods { display: grid; gap: 0; }
+  .genoma-mods li { display: grid; gap: 8px; padding-block: 18px; border-top: 1px solid var(--rule); }
+  .genoma-mods h3 { font-weight: 700; font-size: 1.35rem; letter-spacing: -0.03em; }
+  .genoma-mods p { color: var(--fg-soft); }
+  .genoma-text .btn { justify-self: start; }
+
+  /* ARMONÓGRAFO */
+  .harmo { position: relative; background: var(--paper); }
+  .harmo-stage { position: relative; min-height: 100svh; display: grid; align-items: center; overflow: hidden; }
+  .harmo-canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
+  .harmo-text { position: relative; z-index: 1; display: grid; gap: 24px; max-width: 1100px; margin-left: 0; pointer-events: none; }
+  .harmo-text .t-lead { max-width: 38ch; }
+  @media (max-width: 799px) { .harmo-stage { align-items: start; padding-top: calc(var(--header-h) + 24px); } }
+
+  /* HORIZONTAL */
+  .hscroll { overflow: hidden; }
+  .hscroll-pin { min-height: 100svh; display: grid; grid-template-columns: minmax(0, 1fr); align-content: center; gap: clamp(28px, 4vw, 56px); padding-block: calc(var(--header-h) + 10px) 40px; }
+  .hscroll-head { display: grid; gap: 16px; }
+  .hscroll-track { display: flex; gap: clamp(14px, 2vw, 28px); padding-inline: var(--gutter); overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; }
+  .hscroll-track::-webkit-scrollbar { display: none; }
+  :global(.hs-active) .hscroll-track { overflow: visible; }
+  .hcard { flex: none; width: min(78vw, 520px); scroll-snap-align: start; display: grid; gap: 14px; }
+  .hcard-img { aspect-ratio: 4 / 3; border-radius: 6px; }
+  .hcard-cap { display: grid; grid-template-columns: auto 1fr; gap: 4px 14px; align-items: baseline; }
+  .hcard-cap p { grid-column: 2; text-transform: none; letter-spacing: 0.02em; }
+  .hcard--end { display: grid; place-items: center; }
+  .hcard-more { display: grid; gap: 20px; justify-items: start; padding: 24px; }
+  .hcard-more svg { width: 72px; height: 72px; color: var(--chloro); }
+  @media (min-width: 1000px) { .hcard { width: 34vw; } }
+
+  /* CASOS */
+  .case-rows { border-bottom: 1px solid var(--rule); }
+  .case-row a { display: grid; gap: 6px 24px; padding-block: 26px; border-top: 1px solid var(--rule); transition: padding 0.5s var(--ease), background-color 0.5s; }
+  .case-row a:hover { padding-inline: 16px; background: var(--paper-2); }
+  .cr-num { font-weight: 780; font-size: clamp(2.6rem, 6vw, 5.6rem); letter-spacing: -0.06em; line-height: 0.9; color: var(--leaf); }
+  .cr-label { font-size: 1.05rem; max-width: 40ch; }
+  @media (min-width: 1000px) {
+    .case-row a { grid-template-columns: 120px 0.8fr 1fr 0.8fr; align-items: center; }
+  }
+  .casos-more { margin-top: 32px; }
+
+  /* EMPEZAR */
+  .start-head { grid-column: 1 / -1; display: grid; gap: 20px; align-content: start; }
+  .start-list { grid-column: 1 / -1; border-bottom: 1px solid var(--line); }
+  .start-fig { width: 70%; max-width: 380px; margin-top: 16px; display: none; }
+  @media (min-width: 1000px) {
+    .start-head { grid-column: 1 / span 5; position: sticky; top: 110px; align-self: start; }
+    .start-list { grid-column: 7 / -1; }
+    .start-fig { display: block; }
+  }
+  .start-item { display: grid; grid-template-columns: 40px 1fr; gap: 6px 14px; padding-block: 22px; border-top: 1px solid var(--line); }
+  .start-need { font-weight: 640; font-size: clamp(1.1rem, 1.6vw, 1.45rem); letter-spacing: -0.02em; line-height: 1.2; }
+  .start-answer { grid-column: 2; color: var(--leaf); text-transform: none; letter-spacing: 0.02em; font-size: 0.8rem; }
+  .start-item:hover .start-need { color: var(--leaf); }
+
+  /* PRINCIPIOS */
+  .pr-grid { display: grid; gap: 0 24px; border-bottom: 1px solid var(--rule); }
+  @media (min-width: 700px) { .pr-grid { grid-template-columns: repeat(2, 1fr); } }
+  @media (min-width: 1100px) { .pr-grid { grid-template-columns: repeat(5, 1fr); } }
+  .pr { display: grid; gap: 12px; align-content: start; padding-block: 24px 36px; border-top: 1px solid var(--rule); }
+  .pr-n { font-family: var(--f-serif); font-style: italic; font-size: 3.4rem; line-height: 1; color: var(--leaf); }
+  .pr-photo { margin-top: clamp(48px, 7vw, 110px); max-width: 1100px; margin-inline: auto; }
+</style>

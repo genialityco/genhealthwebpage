@@ -1,0 +1,18 @@
+---
+interface Props { items: { name: string; href: string }[] }
+const { items } = Astro.props;
+---
+<nav aria-label="Ruta de navegación" class="crumbs t-mono">
+  <ol>
+    {items.map((it, i) => (
+      <li>
+        {i < items.length - 1 ? <a class="link-u" href={it.href}>{it.name}</a> : <span aria-current="page">{it.name}</span>}
+      </li>
+    ))}
+  </ol>
+</nav>
+<style>
+  ol { display: flex; flex-wrap: wrap; gap: 6px 10px; color: var(--fg-soft); }
+  li + li::before { content: '/'; margin-right: 10px; opacity: 0.5; }
+  [aria-current] { color: var(--fg); }
+</style>

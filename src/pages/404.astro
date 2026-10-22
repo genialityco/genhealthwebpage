@@ -1,0 +1,20 @@
+---
+import Base from '@/layouts/Base.astro';
+import Figure from '@/components/Figure.astro';
+---
+<Base title="Página no encontrada" description="Esta lámina no existe. Vuelva al inicio de Gen.Health." headerTone="dark">
+  <section class="nf theme-dark">
+    <div class="wrap nf-in">
+      <p class="annot">Error 404 · Lámina perdida</p>
+      <h1 class="t-mega" data-split="chars">404</h1>
+      <p class="t-lead soft">Esta lámina no está en el cuaderno. Puede que se haya movido.</p>
+      <a class="btn" href="/">Volver al inicio</a>
+    </div>
+    <div class="nf-fig" aria-hidden="true"><Figure kind="lissajous" number="404" spin /></div>
+  </section>
+</Base>
+<style>
+  .nf { position: relative; min-height: 100svh; display: grid; align-items: center; overflow: hidden; padding-top: var(--header-h); }
+  .nf-in { position: relative; z-index: 1; display: grid; gap: 24px; justify-items: start; }
+  .nf-fig { position: absolute; right: -10vw; top: 10vh; width: min(90vw, 800px); opacity: 0.5; }
+</style>

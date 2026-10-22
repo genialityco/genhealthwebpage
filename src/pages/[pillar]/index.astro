@@ -1,0 +1,146 @@
+---
+import Base from '@/layouts/Base.astro';
+import PageHero from '@/components/PageHero.astro';
+import ProductCard from '@/components/ProductCard.astro';
+import BlobImage from '@/components/BlobImage.astro';
+import Stats from '@/components/Stats.astro';
+import Faq from '@/components/Faq.astro';
+import CtaBand from '@/components/CtaBand.astro';
+import SectionHead from '@/components/SectionHead.astro';
+import Figure from '@/components/Figure.astro';
+import { pillars, productsOf, telemedicina, type Pillar } from '@/data/catalog';
+import { cases } from '@/data/cases';
+import { breadcrumbLd, collectionLd, faqLd } from '@/lib/ld';
+
+export function getStaticPaths() {
+  return pillars.filter((p) => p.slug !== 'gen-oma').map((p) => ({ params: { pillar: p.slug }, props: { pillar: p } }));
+}
+
+const { pillar } = Astro.props as { pillar: Pillar };
+const list = productsOf(pillar.slug);
+const crumbs = [{ name: 'Inicio', href: '/' }, { name: pillar.name, href: Astro.url.pathname }];
+const faqs = list.flatMap((p) => p.faqs.slice(0, 1));
+const jsonLd = [breadcrumbLd(crumbs, Astro.site!), collectionLd(pillar, list, Astro.site!), faqLd(faqs)];
+
+const pillarCases = {
+  'congresos-y-eventos': ['acn-neurologia', 'ascofame', 'cnqf', 'acis-clis'],
+  'educacion-medica-continua': ['ace-endocrinologia'],
+  'comunicacion-y-audiencia-medica': ['colfi', 'ascofame', 'acis-clis'],
+  'practica-clinica': [],
+  'gen-oma': [],
+}[pillar.slug];
+const related = cases.filter((c) => pillarCases.includes(c.slug));
+const statsOf = list.find((p) => p.stats)?.stats;
+const statsSrc = list.find((p) => p.stats)?.statsSource;
+---
+<Base title={`${pillar.name}: ${pillar.verb.toLowerCase()}`} description={pillar.description} jsonLd={jsonLd} headerTone="dark">
+  <PageHero crumbs={crumbs} kicker={`Frente ${pillar.index} · ${pillar.verb}`} index={pillar.index} name={pillar.name} title={pillar.title} lead={pillar.lead} figure={pillar.figure} />
+
+  {pillar.hero && (
+    <section class="section section--tight intro">
+      <div class="wrap grid">
+        <div class="intro-img"><BlobImage src={pillar.hero.src} alt={pillar.hero.alt} caption={pillar.hero.caption} ratio="5 / 4" seed={3} /></div>
+        <div class="intro-text">
+          <p class="annot">Frente {pillar.index}</p>
+          <p class="t-h3" data-reveal>{pillar.description}</p>
+          <ul class="intro-kw">{pillar.keywords.map((k) => <li class="chip"><i></i>{k}</li>)}</ul>
+        </div>
+      </div>
+    </section>
+  )}
+
+  <section class="section theme-paper2" aria-labelledby="sol-t">
+    <div class="wrap">
+      <SectionHead id="sol-t" annot={`${list.length} soluciones`} title={`Soluciones de <span class='serif-em accent'>${pillar.name.toLowerCase()}</span>`} />
+      <div class="cards">
+        {list.map((p, i) => <ProductCard product={p} index={i} />)}
+      </div>
+    </div>
+  </section>
+
+  {pillar.slug === 'educacion-medica-continua' && (
+    <section class="section theme-dark tele" aria-labelledby="tele-t">
+      <div class="wrap grid">
+        <div class="tele-text">
+          <p class="annot">Oportunidad 2027 · Resolución 1644 de 2026</p>
+          <h2 id="tele-t" class="t-h2" data-split>{telemedicina.title}</h2>
+          <p class="t-lead soft">{telemedicina.lead}</p>
+        </div>
+        <ol class="tele-points">
+          {telemedicina.points.map((pt, i) => (
+            <li data-reveal><span class="t-mono accent">Requisito {String(i + 1).padStart(2, "0")}</span><h3 class="t-h3">{pt.title}</h3><p class="t-body">{pt.text}</p></li>
+          ))}
+        </ol>
+        <p class="t-mono soft tele-src">Fuente: {telemedicina.source}. Confirme el articulado vigente con su área jurídica.</p>
+      </div>
+    </section>
+  )}
+
+  {statsOf && (
+    <section class="section">
+      <div class="wrap">
+        <SectionHead annot="Resultados" title="Lo que ya <span class='serif-em accent'>logramos</span>" />
+        <Stats stats={statsOf} source={statsSrc} />
+      </div>
+    </section>
+  )}
+
+  {related.length > 0 && (
+    <section class="section section--tight cases" aria-labelledby="cs-t">
+      <div class="wrap">
+        <SectionHead id="cs-t" annot="Casos" title="Proyectos que <span class='serif-em accent'>hablan por nosotros</span>" />
+        <ol class="cs-grid">
+          {related.map((c) => (
+            <li data-reveal>
+              <a href={`/casos/#${c.slug}`} class="cs">
+                <span class="t-mono soft">{c.client} · {c.field}</span>
+                <span class="cs-num">{c.headline.value}</span>
+                <span class="t-body">{c.headline.label}</span>
+              </a>
+            </li>
+          ))}
+        </ol>
+      </div>
+    </section>
+  )}
+
+  {pillar.slug === 'practica-clinica' && (
+    <section class="section section--tight principle theme-moss">
+      <div class="wrap grid">
+        <div class="pr-fig" aria-hidden="true"><Figure kind="vesica" number="04" /></div>
+        <div class="pr-text">
+          <p class="annot">Principio</p>
+          <p class="t-display" data-split>Siempre con el especialista en el centro: <span class="serif-em accent">la IA apoya, el médico decide.</span></p>
+          <p class="t-body">Gen.ON Adherencia Pacientes es educación y recordatorios bajo lineamientos de teleorientación, nunca seguimiento clínico ni telemedicina: la Resolución 1644 de 2026 no acepta WhatsApp como plataforma de telemedicina.</p>
+        </div>
+      </div>
+    </section>
+  )}
+
+  <Faq faqs={faqs} title={`Preguntas sobre ${pillar.name.toLowerCase()}`} />
+  <CtaBand />
+</Base>
+
+<style>
+  .intro-img { grid-column: 1 / -1; }
+  .intro-text { grid-column: 1 / -1; display: grid; gap: 22px; align-content: center; }
+  @media (min-width: 1000px) { .intro-img { grid-column: 1 / span 6; } .intro-text { grid-column: 8 / -1; } }
+  .intro-kw { display: flex; flex-wrap: wrap; gap: 8px; }
+  .cards { display: grid; gap: 16px; }
+  @media (min-width: 700px) { .cards { grid-template-columns: repeat(2, 1fr); } }
+  @media (min-width: 1200px) { .cards { grid-template-columns: repeat(3, 1fr); } }
+  .tele-text { grid-column: 1 / -1; display: grid; gap: 22px; }
+  .tele-points { grid-column: 1 / -1; display: grid; gap: 0; }
+  .tele-points li { display: grid; gap: 8px; padding-block: 22px; border-top: 1px solid var(--rule); }
+  .tele-src { grid-column: 1 / -1; text-transform: none; letter-spacing: 0.02em; }
+  @media (min-width: 1000px) { .tele-text { grid-column: 1 / span 6; } .tele-points { grid-column: 8 / -1; } }
+  .cs-grid { display: grid; gap: 16px; }
+  @media (min-width: 900px) { .cs-grid { grid-template-columns: repeat(2, 1fr); } }
+  .cs { display: grid; gap: 10px; padding: 26px; border-radius: 6px; box-shadow: inset 0 0 0 1px var(--rule); transition: background-color 0.4s; height: 100%; }
+  .cs:hover { background: var(--paper-2); }
+  .cs-num { font-weight: 780; font-size: clamp(3rem, 6vw, 5.4rem); letter-spacing: -0.06em; line-height: 0.9; color: var(--leaf); }
+  .pr-fig { grid-column: 1 / -1; width: min(70vw, 420px); }
+  .pr-text { grid-column: 1 / -1; display: grid; gap: 24px; }
+  .pr-text .t-display { font-size: clamp(2.2rem, 5.4vw, 5.6rem); }
+  @media (min-width: 1000px) { .pr-fig { grid-column: 1 / span 4; width: 100%; } .pr-text { grid-column: 6 / -1; } }
+</style>

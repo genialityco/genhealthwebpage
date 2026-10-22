@@ -1,0 +1,27 @@
+---
+import type { Stat } from '@/data/catalog';
+interface Props { stats: Stat[]; source?: string; cols?: 2 | 3 | 4 }
+const { stats, source, cols = 4 } = Astro.props;
+const fmt = (s: Stat) =>
+  `${s.prefix ?? ''}${s.value.toLocaleString('es-CO', { minimumFractionDigits: s.decimals ?? 0, maximumFractionDigits: s.decimals ?? 0 })}${s.suffix ?? ''}`;
+---
+<div class="stats" style={`--cols:${cols}`}>
+  <dl>
+    {stats.map((s, i) => (
+      <div class="stat" data-reveal>
+        <dt class="t-mono soft">{String(i + 1).padStart(2, '0')}</dt>
+        <dd class="t-num" data-count={s.value} data-decimals={s.decimals ?? 0} data-prefix={s.prefix ?? ''} data-suffix={s.suffix ?? ''}>{fmt(s)}</dd>
+        <dd class="stat-label">{s.label}</dd>
+      </div>
+    ))}
+  </dl>
+  {source && <p class="t-mono soft stats-src">Fuente: {source}</p>}
+</div>
+<style>
+  dl { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 clamp(16px, 2vw, 32px); }
+  @media (min-width: 900px) { dl { grid-template-columns: repeat(var(--cols), minmax(0, 1fr)); } }
+  .stat { display: grid; gap: 12px; align-content: start; padding-block: 22px 32px; border-top: 1px solid var(--rule); }
+  .t-num { color: var(--accent); font-size: clamp(2.6rem, 6vw, 6.2rem); white-space: nowrap; }
+  .stat-label { max-width: 26ch; color: var(--fg); font-size: 1rem; line-height: 1.35; }
+  .stats-src { margin-top: 18px; text-transform: none; letter-spacing: 0.02em; }
+</style>

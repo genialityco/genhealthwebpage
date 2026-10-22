@@ -1,0 +1,19 @@
+---
+interface Props { items: string[]; outline?: boolean; label: string }
+const { items, outline = false, label } = Astro.props;
+---
+<div class:list={['marquee', { outline }]} data-marquee aria-label={label} role="region">
+  <ul class="marquee-track">
+    {[...items, ...items].map((t, i) => (
+      <li aria-hidden={i >= items.length ? 'true' : undefined}>{t}<span class="sep" aria-hidden="true">✳︎</span></li>
+    ))}
+  </ul>
+</div>
+<style>
+  .marquee { overflow: hidden; padding-block: 18px; border-block: 1px solid var(--rule); }
+  .marquee-track { display: flex; width: max-content; will-change: transform; }
+  li { display: flex; align-items: center; white-space: nowrap; font-weight: 720; letter-spacing: -0.04em; font-size: clamp(1.8rem, 4.6vw, 4.4rem); line-height: 1; }
+  .sep { font-size: 0.5em; margin-inline: 0.7em; color: var(--spark); }
+  .outline li { color: transparent; -webkit-text-stroke: 1px var(--fg); }
+  .outline .sep { -webkit-text-stroke: 0; }
+</style>

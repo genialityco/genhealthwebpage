@@ -1,0 +1,148 @@
+---
+import Base from '@/layouts/Base.astro';
+import PageHero from '@/components/PageHero.astro';
+import Figure from '@/components/Figure.astro';
+import Faq from '@/components/Faq.astro';
+import CtaBand from '@/components/CtaBand.astro';
+import SectionHead from '@/components/SectionHead.astro';
+import { pillarBySlug, genoma } from '@/data/catalog';
+import { breadcrumbLd, faqLd } from '@/lib/ld';
+
+const pillar = pillarBySlug('gen-oma');
+const crumbs = [{ name: 'Inicio', href: '/' }, { name: 'Gen.oma', href: '/gen-oma/' }];
+const jsonLd = [
+  breadcrumbLd(crumbs, Astro.site!),
+  {
+    '@context': 'https://schema.org',
+    '@type': 'SoftwareApplication',
+    name: 'Gen.oma',
+    applicationCategory: 'HealthApplication',
+    operatingSystem: 'Web',
+    description: pillar.description,
+    url: new URL('/gen-oma/', Astro.site).href,
+    publisher: { '@id': new URL('/#organizacion', Astro.site).href },
+    inLanguage: 'es-CO',
+    featureList: genoma.modules.map((m) => m.title),
+  },
+  faqLd(genoma.faqs),
+];
+---
+<Base title="Gen.oma: agentes de IA con el aval de su asociación médica" description={pillar.description} jsonLd={jsonLd} headerTone="dark">
+  <PageHero crumbs={crumbs} kicker="Frente 02 · Donde se guarda · Agentes de IA · RAG" index="02" name="Gen.oma" title={pillar.title} lead={pillar.lead} figure="cell" status="Disponible" />
+
+  <!-- La pregunta -->
+  <section class="section q">
+    <div class="wrap">
+      <p class="annot">La pregunta de hoy</p>
+      <p class="t-display q-text" data-split>Hoy el médico pregunta a Google, a las redes y a la IA general. <span class="serif-em accent">¿Dónde queda el aval de la asociación?</span></p>
+      <p class="t-lead soft q-ans" data-reveal>En Gen.oma: el conocimiento de su especialidad, consultable en segundos, con la guía, el año y la página.</p>
+    </div>
+  </section>
+
+  <!-- Cómo responde -->
+  <section class="section theme-moss how" aria-labelledby="how-t">
+    <div class="wrap grid">
+      <div class="how-text">
+        <p class="annot">Cómo responde</p>
+        <h2 id="how-t" class="t-h2" data-split>Responde <span class="serif-em accent">solo</span> con las fuentes de su asociación</h2>
+        <p class="t-lead soft">RAG significa que la IA consulta sus guías, consensos y trabajos en cada respuesta y los cita, en vez de responder de memoria.</p>
+        <ol class="flow">
+          {['Pregunta del especialista', 'Búsqueda en la biblioteca de la asociación', 'Respuesta con cita: guía · año · página', 'Validación del comité académico'].map((s, i) => (
+            <li data-reveal><span class="t-mono accent">{String(i + 1).padStart(2, '0')}</span>{s}</li>
+          ))}
+        </ol>
+      </div>
+      <div class="how-fig" aria-hidden="true"><Figure kind="orbit" number="02" spin /></div>
+    </div>
+  </section>
+
+  <!-- Módulos -->
+  <section class="section" aria-labelledby="mod-t">
+    <div class="wrap">
+      <SectionHead id="mod-t" annot="Módulos" title="Cuatro maneras de <span class='serif-em accent'>guardar y abrir</span> el conocimiento" />
+      <div class="mods">
+        {genoma.modules.map((m, i) => (
+          <article class="mod" data-reveal>
+            <div class="mod-top"><span class="t-mono soft">{String(i + 1).padStart(2, '0')}</span><span class="chip" data-status={m.status}><i></i>{m.status}</span></div>
+            <div class="mod-fig" aria-hidden="true"><Figure kind={(['phyllotaxis', 'flower', 'spiral', 'wave'] as const)[i]} annotate={false} /></div>
+            <h3 class="t-h3">{m.title}</h3>
+            <p class="t-body">{m.text}</p>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Acceso y límites -->
+  <section class="section theme-dark access" aria-labelledby="acc-t">
+    <div class="wrap grid">
+      <div class="acc-col">
+        <p class="annot">Ustedes deciden</p>
+        <h2 id="acc-t" class="t-h2" data-split>Quién lo consulta</h2>
+        <ol class="acc-list">
+          {genoma.access.map((a, i) => (
+            <li data-reveal><span class="acc-n">{i + 1}</span><p><b>{a.title}</b>, {a.text}</p></li>
+          ))}
+        </ol>
+      </div>
+      <div class="acc-col">
+        <p class="annot">Límites de diseño</p>
+        <h2 class="t-h2" data-split>Lo que Gen.oma <span class="serif-em accent">nunca</span> hace</h2>
+        <ul class="never">
+          {genoma.never.map((n) => <li data-reveal>{n}</li>)}
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- Proceso -->
+  <section class="section section--tight theme-paper2" aria-labelledby="proc-t">
+    <div class="wrap">
+      <SectionHead id="proc-t" annot="Cómo lo construimos juntos" title="Tres pasos, <span class='serif-em accent'>con su comité</span>" />
+      <ol class="steps">
+        {genoma.steps.map((s, i) => (
+          <li class="step" data-reveal>
+            <span class="step-n">{String(i + 1).padStart(2, '0')}</span>
+            <h3 class="t-h3">{s.title}</h3>
+            <p class="t-body">{s.text}</p>
+          </li>
+        ))}
+      </ol>
+      <p class="ref t-lead" data-reveal>En Estados Unidos, el <i>New England Journal of Medicine</i> y <i>JAMA</i> ya licencian su contenido a herramientas de IA para médicos. Gen.oma lleva esa posibilidad a las sociedades científicas de la región, <b>en español y con la sociedad como dueña.</b></p>
+      <p class="t-mono soft">Fuente: Fierce Healthcare, 2025</p>
+    </div>
+  </section>
+
+  <Faq faqs={genoma.faqs} title="Preguntas sobre Gen.oma" />
+  <CtaBand title="Traiga una pregunta real de su comité." text="La probamos juntos en una demostración con el conocimiento de su asociación." />
+</Base>
+
+<style>
+  .q-text { max-width: 22ch; margin-block: 24px; font-size: clamp(2.2rem, 6.4vw, 7rem); }
+  .q-ans { max-width: 44ch; }
+  .how-text { grid-column: 1 / -1; display: grid; gap: 22px; align-content: start; }
+  .how-fig { grid-column: 1 / -1; width: min(86vw, 520px); justify-self: center; }
+  @media (min-width: 1000px) { .how-text { grid-column: 1 / span 6; } .how-fig { grid-column: 8 / -1; width: 100%; } }
+  .flow { display: grid; margin-top: 12px; }
+  .flow li { display: flex; gap: 16px; align-items: baseline; padding-block: 16px; border-top: 1px solid var(--rule); font-weight: 640; font-size: 1.2rem; letter-spacing: -0.02em; }
+  .mods { display: grid; gap: 16px; }
+  @media (min-width: 700px) { .mods { grid-template-columns: repeat(2, 1fr); } }
+  @media (min-width: 1200px) { .mods { grid-template-columns: repeat(4, 1fr); } }
+  .mod { display: grid; gap: 14px; align-content: start; padding: 22px; border-radius: 6px; box-shadow: inset 0 0 0 1px var(--rule); }
+  .mod-top { display: flex; justify-content: space-between; align-items: center; }
+  .mod-fig { width: 60%; aspect-ratio: 1; margin: 10px auto; }
+  .acc-col { grid-column: 1 / -1; display: grid; gap: 22px; align-content: start; }
+  @media (min-width: 1000px) { .acc-col:first-child { grid-column: 1 / span 6; } .acc-col:last-child { grid-column: 8 / -1; } }
+  .acc-col + .acc-col { margin-top: 56px; }
+  @media (min-width: 1000px) { .acc-col + .acc-col { margin-top: 0; } }
+  .acc-list li { display: grid; grid-template-columns: 56px 1fr; gap: 16px; padding-block: 18px; border-top: 1px solid var(--rule); font-size: 1.15rem; }
+  .acc-n { font-family: var(--f-serif); font-style: italic; font-size: 2.6rem; line-height: 1; color: var(--chloro); }
+  .never li { position: relative; padding: 18px 0 18px 40px; border-top: 1px solid var(--rule); font-size: 1.15rem; }
+  .never li::before { content: ''; position: absolute; left: 0; top: 50%; width: 22px; height: 1.5px; background: var(--spark); transform: rotate(-45deg); }
+  .never li::after { content: ''; position: absolute; left: 0; top: 50%; width: 22px; height: 1.5px; background: var(--spark); transform: rotate(45deg); }
+  .steps { display: grid; gap: 16px; margin-bottom: 56px; }
+  @media (min-width: 900px) { .steps { grid-template-columns: repeat(3, 1fr); gap: 24px; } }
+  .step { display: grid; gap: 12px; padding-top: 20px; border-top: 2px solid var(--ink); }
+  .step-n { font-weight: 780; font-size: clamp(3rem, 6vw, 5.4rem); letter-spacing: -0.06em; line-height: 0.9; color: var(--leaf); }
+  .ref { max-width: 52ch; margin-bottom: 12px; }
+</style>

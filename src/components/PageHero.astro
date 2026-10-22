@@ -1,0 +1,54 @@
+---
+import Figure from '@/components/Figure.astro';
+import Breadcrumbs from '@/components/Breadcrumbs.astro';
+import type { FigureKind, Status } from '@/data/catalog';
+interface Props {
+  crumbs: { name: string; href: string }[];
+  kicker: string;
+  index?: string;
+  name: string;
+  title: string;
+  lead: string;
+  figure: FigureKind;
+  status?: Status;
+  seed?: number;
+}
+const { crumbs, kicker, index = '01', name, title, lead, figure, status, seed } = Astro.props;
+---
+<section class="phero theme-dark">
+  <div class="phero-fig" aria-hidden="true" data-speed="0.25">
+    <Figure kind={figure} number={index} seed={seed} spin />
+  </div>
+  <div class="wrap phero-in">
+    <Breadcrumbs items={crumbs} />
+    <div class="phero-meta">
+      <p class="annot">{kicker}</p>
+      {status && <span class="chip" data-status={status}><i></i>{status}</span>}
+    </div>
+    <p class="phero-name" data-split="chars">{name}</p>
+    <h1 class="t-h2 phero-title" data-split>{title}</h1>
+    <p class="t-lead phero-lead" data-reveal>{lead}</p>
+    <div class="phero-actions" data-reveal>
+      <a class="btn" href="/contacto/" data-magnetic>
+        Solicitar una demostración
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" /></svg>
+      </a>
+      <slot name="actions" />
+    </div>
+  </div>
+</section>
+<style>
+  .phero { position: relative; overflow: hidden; padding-top: calc(var(--header-h) + 32px); padding-bottom: clamp(64px, 9vw, 140px); min-height: 92svh; display: flex; align-items: flex-end; }
+  .phero-in { position: relative; z-index: 1; display: grid; gap: 22px; }
+  .phero-meta { display: flex; flex-wrap: wrap; gap: 16px; align-items: center; margin-top: clamp(40px, 10vh, 120px); }
+  .phero-name {
+    font-weight: 820; letter-spacing: -0.07em; line-height: 0.82;
+    font-size: clamp(3.4rem, 14vw, 15rem); color: var(--chloro);
+    margin-left: -0.05em; text-wrap: balance;
+  }
+  .phero-title { max-width: 20ch; }
+  .phero-lead { max-width: 46ch; color: var(--fg-soft); }
+  .phero-actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 8px; }
+  .phero-fig { position: absolute; width: min(110vw, 980px); right: -24vw; top: 2vh; opacity: 0.55; pointer-events: none; }
+  @media (min-width: 1000px) { .phero-fig { right: -6vw; top: -6vh; width: min(62vw, 1040px); opacity: 0.8; } }
+</style>

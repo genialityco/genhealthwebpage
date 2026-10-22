@@ -1,0 +1,53 @@
+---
+import { plate } from '@/lib/figures';
+import type { FigureKind } from '@/data/catalog';
+
+interface Props {
+  kind: FigureKind;
+  seed?: number;
+  /** Número de lámina y rótulos técnicos alrededor. */
+  annotate?: boolean;
+  number?: string;
+  class?: string;
+  /** Anima el trazo al entrar en pantalla. */
+  draw?: boolean;
+  /** Rotación lenta continua. */
+  spin?: boolean;
+}
+
+const { kind, seed, annotate = true, number = '01', class: cls, draw = true, spin = false } = Astro.props;
+const p = plate(kind, seed);
+const ticks = Array.from({ length: 41 }, (_, i) => i);
+---
+<svg
+  class:list={['plate', cls]}
+  viewBox={annotate ? '-60 -60 1120 1160' : '0 0 1000 1000'}
+  role="img"
+  aria-label={`${p.label}: ${p.formula}`}
+  data-draw={draw ? '' : undefined}
+  data-spin={spin ? '' : undefined}
+>
+  {annotate && (
+    <g class="annot-layer" aria-hidden="true">
+      {ticks.map((i) => (
+        <line class="tick" x1={i * 25} x2={i * 25} y1={-40} y2={i % 5 ? -30 : -20} />
+      ))}
+      {ticks.map((i) => (
+        <line class="tick" y1={i * 25} y2={i * 25} x1={-40} x2={i % 5 ? -30 : -20} />
+      ))}
+      <text x="0" y="-48">Lám. {number}</text>
+      <text x="1000" y="-48" text-anchor="end">1000 u</text>
+      <text x="0" y="1060">{p.label}</text>
+      <text x="1000" y="1060" text-anchor="end" style="text-transform:none">{p.formula}</text>
+    </g>
+  )}
+  <g class="plate-body">
+    {p.shapes.map((s) =>
+      s.circle ? (
+        <circle cx={s.circle[0].toFixed(1)} cy={s.circle[1].toFixed(1)} r={s.circle[2].toFixed(1)} class:list={[`t${s.tone}`, { f: s.fill }]} />
+      ) : (
+        <path d={s.d} class:list={[`t${s.tone}`, { f: s.fill }]} />
+      )
+    )}
+  </g>
+</svg>

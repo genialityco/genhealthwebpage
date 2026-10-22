@@ -1,0 +1,93 @@
+---
+import { site } from '@/data/site';
+import { pillars, productsOf, productUrl } from '@/data/catalog';
+import Figure from '@/components/Figure.astro';
+const year = new Date().getFullYear();
+---
+<footer class="ftr theme-dark">
+  <div class="wrap">
+    <div class="ftr-cta grid">
+      <div class="ftr-cta-text">
+        <p class="annot">Lámina final · Contacto</p>
+        <h2 class="t-display" data-split>Hagamos que su especialidad <span class="serif-em accent">siga avanzando.</span></h2>
+      </div>
+      <div class="ftr-cta-side">
+        <p class="t-lead">Una reunión corta para conocer a su organización y escuchar lo que necesita. Después, una propuesta a su medida.</p>
+        <div class="ftr-actions">
+          <a class="btn" href="/contacto/" data-magnetic>
+            Agendar una reunión
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" /></svg>
+          </a>
+          <a class="btn btn--ghost" href={site.contact.whatsapp} rel="noopener" target="_blank">WhatsApp</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="ftr-map">
+      {pillars.map((p) => (
+        <div class="ftr-col">
+          <p class="t-mono accent">{p.index} · {p.verb}</p>
+          <a class="ftr-pillar" href={`/${p.slug}/`}>{p.name}</a>
+          <ul>
+            {productsOf(p.slug).map((x) => <li><a class="link-u" href={productUrl(x)}>{x.name}</a></li>)}
+          </ul>
+        </div>
+      ))}
+      <div class="ftr-col">
+        <p class="t-mono accent">Gen.Health</p>
+        <ul>
+          <li><a class="link-u" href="/casos/">Casos y resultados</a></li>
+          <li><a class="link-u" href="/nosotros/">Nosotros y principios</a></li>
+          <li><a class="link-u" href="/contacto/">Contacto</a></li>
+        </ul>
+        <address class="ftr-contact">
+          <span>{site.contact.person}</span>
+          <span class="soft">{site.contact.role}</span>
+          <a class="link-u" href={`mailto:${site.contact.email}`}>{site.contact.email}</a>
+          <a class="link-u" href={site.contact.phoneHref}>{site.contact.phone}</a>
+        </address>
+      </div>
+    </div>
+
+    <div class="ftr-word" aria-hidden="true">
+      <div class="ftr-fig"><Figure kind="spiral" annotate={false} /></div>
+      <span>Gen<span class="spark">.</span>Health</span>
+    </div>
+
+    <div class="ftr-base t-mono soft">
+      <span>© {year} Gen.Health · Línea de salud de {site.legalName}</span>
+      <span>Datos tratados según la Ley 1581 de 2012</span>
+      <span>{site.city}, {site.country}</span>
+    </div>
+  </div>
+</footer>
+
+<style>
+  .ftr { position: relative; padding-top: clamp(80px, 12vw, 180px); overflow: hidden; }
+  .ftr-cta { align-items: end; padding-bottom: clamp(60px, 9vw, 140px); }
+  .ftr-cta-text { grid-column: 1 / -1; display: grid; gap: 28px; }
+  .ftr-cta-side { grid-column: 1 / -1; display: grid; gap: 28px; }
+  .ftr-actions { display: flex; flex-wrap: wrap; gap: 12px; }
+  @media (min-width: 1000px) {
+    .ftr-cta-text { grid-column: 1 / span 8; }
+    .ftr-cta-side { grid-column: 9 / -1; }
+  }
+  .ftr-map {
+    display: grid; gap: 36px 24px; grid-template-columns: repeat(2, minmax(0, 1fr));
+    padding-block: 48px; border-top: 1px solid var(--rule);
+  }
+  @media (min-width: 900px) { .ftr-map { grid-template-columns: repeat(6, minmax(0, 1fr)); } }
+  .ftr-col { display: grid; gap: 12px; align-content: start; font-size: 0.95rem; }
+  .ftr-col ul { display: grid; gap: 6px; color: var(--fg-soft); }
+  .ftr-col a:hover { color: var(--fg); }
+  .ftr-pillar { font-weight: 700; font-size: 1.15rem; letter-spacing: -0.02em; }
+  .ftr-contact { font-style: normal; display: grid; gap: 4px; margin-top: 10px; font-size: 0.9rem; }
+  .ftr-word {
+    position: relative; font-weight: 820; letter-spacing: -0.075em; line-height: 0.75;
+    font-size: clamp(3.6rem, 18.4vw, 21rem); white-space: nowrap; margin-inline: -0.04em;
+    padding-top: 40px; user-select: none;
+  }
+  .ftr-word > span { position: relative; z-index: 1; }
+  .ftr-fig { position: absolute; right: 2%; bottom: -10%; width: min(46vw, 640px); opacity: 0.55; }
+  .ftr-base { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 10px 24px; padding-block: 28px 36px; border-top: 1px solid var(--rule); margin-top: 24px; }
+</style>

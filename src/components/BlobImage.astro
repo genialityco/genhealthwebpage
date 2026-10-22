@@ -1,0 +1,31 @@
+---
+import { Image } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
+interface Props {
+  src: ImageMetadata;
+  alt: string;
+  caption?: string;
+  ratio?: string;
+  seed?: number;
+  sizes?: string;
+  eager?: boolean;
+  class?: string;
+}
+const { src, alt, caption, ratio = '4 / 5', seed = 1, sizes = '(min-width: 1000px) 45vw, 92vw', eager = false, class: cls } = Astro.props;
+const id = `blob-${Math.random().toString(36).slice(2, 9)}`;
+---
+<figure class:list={['blobfig', cls]}>
+  <div class="blob" style={`aspect-ratio:${ratio}; clip-path:url(#${id})`} data-blob={id} data-seed={seed}>
+    <Image src={src} alt={alt} widths={[480, 800, 1200, 1600]} sizes={sizes} loading={eager ? 'eager' : 'lazy'} fetchpriority={eager ? 'high' : undefined} data-parallax-img />
+  </div>
+  <svg width="0" height="0" aria-hidden="true" style="position:absolute">
+    <clipPath id={id} clipPathUnits="objectBoundingBox"><path d="M0.5 0C0.85 0 1 0.2 1 0.5S0.85 1 0.5 1 0 0.8 0 0.5 0.15 0 0.5 0Z" /></clipPath>
+  </svg>
+  {caption && <figcaption class="t-mono soft">{caption}</figcaption>}
+</figure>
+<style>
+  .blobfig { position: relative; }
+  .blob { overflow: hidden; background: var(--paper-3); }
+  .blob :global(img) { width: 100%; height: 115%; object-fit: cover; margin-top: -7.5%; }
+  figcaption { text-transform: none; letter-spacing: 0.02em; }
+</style>

@@ -1,0 +1,215 @@
+---
+import { Image } from 'astro:assets';
+import Base from '@/layouts/Base.astro';
+import PageHero from '@/components/PageHero.astro';
+import Figure from '@/components/Figure.astro';
+import Stats from '@/components/Stats.astro';
+import Faq from '@/components/Faq.astro';
+import ProductCard from '@/components/ProductCard.astro';
+import BlobImage from '@/components/BlobImage.astro';
+import CtaBand from '@/components/CtaBand.astro';
+import SectionHead from '@/components/SectionHead.astro';
+import { products, pillarBySlug, productsOf, type Product } from '@/data/catalog';
+import { breadcrumbLd, faqLd, serviceLd } from '@/lib/ld';
+
+export function getStaticPaths() {
+  return products.map((p) => ({ params: { pillar: p.pillar, product: p.slug }, props: { p } }));
+}
+
+const { p } = Astro.props as { p: Product };
+const pillar = pillarBySlug(p.pillar);
+const siblings = productsOf(p.pillar).filter((x) => x.slug !== p.slug);
+const crumbs = [
+  { name: 'Inicio', href: '/' },
+  { name: pillar.name, href: `/${pillar.slug}/` },
+  { name: p.name, href: Astro.url.pathname },
+];
+const jsonLd = [breadcrumbLd(crumbs, Astro.site!), serviceLd(p, pillar, Astro.site!), faqLd(p.faqs)];
+const richItems = p.features.some((f) => f.pic);
+const [lead, ...rest] = p.gallery ?? [];
+---
+<Base title={`${p.name}: ${p.kicker}`} description={p.description} jsonLd={jsonLd} headerTone="dark">
+  <PageHero crumbs={crumbs} kicker={`${pillar.index} · ${pillar.verb} · ${p.kicker}`} index={pillar.index} name={p.name} title={p.title} lead={p.lead} figure={p.figure} status={p.status} />
+
+  <!-- Para quién -->
+  <section class="section section--tight">
+    <div class="wrap grid who">
+      <p class="annot who-annot">Para quién</p>
+      <ul class="who-list">
+        {p.audiences.map((a, i) => (
+          <li data-reveal><span class="t-mono accent">{String.fromCharCode(97 + i)})</span>{a}</li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  {richItems ? (
+    <section class="section rich" aria-labelledby="feat-t">
+      <div class="wrap">
+        <SectionHead id="feat-t" annot="Repertorio" title="Cada experiencia se diseña para <span class='serif-em accent'>emocionar, involucrar y medir</span>" />
+        <ol class="rich-list">
+          {p.features.map((f, i) => (
+            <li class:list={['rich-item', { flip: i % 2 }]}>
+              {f.pic && (
+                <div class="rich-img">
+                  <BlobImage src={f.pic.src} alt={f.pic.alt} ratio="1 / 1" seed={i + 2} sizes="(min-width: 1000px) 40vw, 92vw" />
+                </div>
+              )}
+              <div class="rich-text" data-reveal>
+                <div class="rich-meta"><span class="t-mono soft">{String(i + 1).padStart(2, '0')}</span>{f.status && <span class="chip" data-status={f.status}><i></i>{f.status}</span>}</div>
+                <h3 class="t-h2">{f.title}</h3>
+                <p class="t-lead soft">{f.text}</p>
+              </div>
+            </li>
+          ))}
+        </ol>
+      </div>
+    </section>
+  ) : (
+    <section class="section theme-paper2 feats" aria-labelledby="feat-t">
+      <div class="wrap grid">
+        <div class="feats-head">
+          <p class="annot">Qué incluye</p>
+          <h2 id="feat-t" class="t-h2" data-split>Componentes de <span class="serif-em accent">{p.name}</span></h2>
+          <div class="feats-fig" aria-hidden="true"><Figure kind={p.figure} number={pillar.index} seed={5} /></div>
+        </div>
+        <ol class="feats-list">
+          {p.features.map((f, i) => (
+            <li class="feat" data-reveal>
+              <span class="feat-n">{String(i + 1).padStart(2, '0')}</span>
+              <h3 class="t-h3">{f.title}</h3>
+              <p class="t-body">{f.text}</p>
+            </li>
+          ))}
+        </ol>
+      </div>
+    </section>
+  )}
+
+  {p.compare && (
+    <section class="section theme-dark compare" aria-labelledby="cmp-t">
+      <div class="wrap">
+        <SectionHead id="cmp-t" annot="Comparativo" title="La diferencia no es la transmisión: <span class='serif-em accent'>es lo que queda después.</span>" />
+        <div class="cmp-scroll">
+          <table class="cmp">
+            <thead><tr>{p.compare.head.map((h, i) => <th scope="col" class:list={{ hl: i === 2 }}>{h}</th>)}</tr></thead>
+            <tbody>
+              {p.compare.rows.map((r) => (
+                <tr data-reveal><th scope="row">{r[0]}</th><td>{r[1]}</td><td class="hl">{r[2]}</td></tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+  )}
+
+  {p.stats && (
+    <section class="section" aria-labelledby="st-t">
+      <div class="wrap">
+        <SectionHead id="st-t" annot="Resultados medidos" title="Cifras que <span class='serif-em accent'>se pueden verificar</span>" />
+        <Stats stats={p.stats} source={p.statsSource} cols={p.stats.length === 3 ? 3 : 4} />
+      </div>
+    </section>
+  )}
+
+  {lead && (
+    <section class="section section--tight gallery" aria-label={`Imágenes de ${p.name}`}>
+      <div class="wrap gal-grid">
+        <figure class="gal-lead">
+          <div class="frame gal-frame" data-clip>
+            <Image src={lead.src} alt={lead.alt} widths={[640, 1000, 1600]} sizes="(min-width: 1000px) 62vw, 92vw" data-parallax-img />
+          </div>
+          {lead.caption && <figcaption class="t-mono soft">{lead.caption}</figcaption>}
+        </figure>
+        {rest.map((g, i) => (
+          <figure class:list={['gal-item', `gi-${i % 3}`]} data-reveal>
+            <div class="frame"><Image src={g.src} alt={g.alt} widths={[400, 800]} sizes="(min-width: 1000px) 30vw, 46vw" /></div>
+            {g.caption && <figcaption class="t-mono soft">{g.caption}</figcaption>}
+          </figure>
+        ))}
+      </div>
+    </section>
+  )}
+
+  {p.quote && (
+    <section class="section section--tight quote theme-moss">
+      <div class="wrap">
+        <blockquote class="t-display" data-split><span class="serif-em">“</span>{p.quote}<span class="serif-em">”</span></blockquote>
+        <p class="t-mono soft">Manifiesto Gen.Health</p>
+      </div>
+    </section>
+  )}
+
+  <Faq faqs={p.faqs} title={`Preguntas sobre ${p.name}`} />
+
+  {siblings.length > 0 && (
+    <section class="section section--tight related" aria-labelledby="rel-t">
+      <div class="wrap">
+        <div class="rel-head">
+          <p class="annot">{pillar.index} · {pillar.verb}</p>
+          <h2 id="rel-t" class="t-h2" data-split>También en {pillar.name}</h2>
+        </div>
+        <div class="rel-grid">
+          {siblings.map((s, i) => <ProductCard product={s} index={i} />)}
+        </div>
+      </div>
+    </section>
+  )}
+
+  <CtaBand title={`¿Quiere ver ${p.name} en acción?`} />
+</Base>
+
+<style>
+  .who { align-items: start; }
+  .who-annot { grid-column: 1 / -1; }
+  .who-list { grid-column: 1 / -1; display: grid; gap: 0; }
+  @media (min-width: 1000px) { .who-annot { grid-column: 1 / span 3; padding-top: 18px; } .who-list { grid-column: 4 / -1; } }
+  .who-list li { display: flex; gap: 18px; align-items: baseline; padding-block: 14px; border-bottom: 1px solid var(--rule); font-weight: 680; font-size: clamp(1.5rem, 3.4vw, 3.2rem); letter-spacing: -0.045em; line-height: 1.05; }
+
+  .feats-head { grid-column: 1 / -1; display: grid; gap: 20px; align-content: start; }
+  .feats-list { grid-column: 1 / -1; }
+  .feats-fig { width: min(80%, 420px); margin-top: 12px; }
+  @media (min-width: 1000px) {
+    .feats-head { grid-column: 1 / span 5; position: sticky; top: 110px; align-self: start; }
+    .feats-list { grid-column: 7 / -1; }
+  }
+  .feat { display: grid; grid-template-columns: 56px 1fr; gap: 8px 16px; padding-block: 26px; border-top: 1px solid var(--line); }
+  .feat .t-body { grid-column: 2; max-width: 52ch; }
+  .feat-n { font-family: var(--f-serif); font-style: italic; font-size: 2.2rem; line-height: 1; color: var(--leaf); }
+
+  .rich-list { display: grid; gap: clamp(64px, 9vw, 140px); }
+  .rich-item { display: grid; gap: 28px; align-items: center; }
+  .rich-text { display: grid; gap: 18px; }
+  .rich-meta { display: flex; gap: 14px; align-items: center; }
+  .rich-img { width: min(100%, 560px); }
+  @media (min-width: 1000px) {
+    .rich-item { grid-template-columns: 1fr 1fr; gap: 64px; }
+    .rich-item.flip .rich-img { order: 2; justify-self: end; }
+  }
+
+  .cmp-scroll { overflow-x: auto; margin-inline: calc(var(--gutter) * -1); padding-inline: var(--gutter); }
+  .cmp { width: 100%; min-width: 680px; border-collapse: collapse; }
+  .cmp th, .cmp td { text-align: left; padding: 20px 16px 20px 0; border-top: 1px solid var(--rule); vertical-align: top; font-size: 1.05rem; }
+  .cmp thead th { font-family: var(--f-mono); font-size: 0.72rem; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: var(--fg-soft); }
+  .cmp tbody th { font-weight: 700; width: 18%; }
+  .cmp td { color: var(--fg-soft); }
+  .cmp .hl { color: var(--chloro); }
+  .cmp thead .hl { color: var(--chloro); }
+
+  .gal-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
+  .gal-lead { grid-column: 1 / -1; }
+  .gal-frame { aspect-ratio: 16 / 9; }
+  .gal-item .frame { aspect-ratio: 4 / 5; }
+  @media (min-width: 1000px) {
+    .gal-grid { grid-template-columns: repeat(3, 1fr); gap: 24px; }
+    .gi-1 { margin-top: 80px; }
+  }
+
+  .quote blockquote { max-width: 18ch; margin-bottom: 24px; }
+
+  .rel-head { display: grid; gap: 16px; margin-bottom: 40px; }
+  .rel-grid { display: grid; gap: 16px; }
+  @media (min-width: 700px) { .rel-grid { grid-template-columns: repeat(2, 1fr); } }
+  @media (min-width: 1100px) { .rel-grid { grid-template-columns: repeat(3, 1fr); } }
+</style>

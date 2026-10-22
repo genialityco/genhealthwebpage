@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://genhealth.geniality.com.co/sitemap-index.xml

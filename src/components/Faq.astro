@@ -1,0 +1,38 @@
+---
+import type { Faq } from '@/data/catalog';
+interface Props { faqs: Faq[]; title?: string }
+const { faqs, title = 'Preguntas frecuentes' } = Astro.props;
+---
+<section class="section section--tight faq" aria-labelledby="faq-title">
+  <div class="wrap grid">
+    <div class="faq-head">
+      <p class="annot">Glosario y dudas</p>
+      <h2 id="faq-title" class="t-h2" data-split>{title}</h2>
+    </div>
+    <div class="faq-list">
+      {faqs.map((f) => (
+        <details class="faq-item" data-reveal>
+          <summary>
+            <h3 class="t-h3">{f.q}</h3>
+            <span class="faq-icon" aria-hidden="true"></span>
+          </summary>
+          <p class="t-body">{f.a}</p>
+        </details>
+      ))}
+    </div>
+  </div>
+</section>
+<style>
+  .faq-head { grid-column: 1 / -1; display: grid; gap: 20px; align-content: start; }
+  .faq-list { grid-column: 1 / -1; border-bottom: 1px solid var(--rule); }
+  @media (min-width: 1000px) { .faq-head { grid-column: 1 / span 5; position: sticky; top: 120px; } .faq-list { grid-column: 6 / -1; } }
+  .faq-item { border-top: 1px solid var(--rule); }
+  summary { list-style: none; display: flex; justify-content: space-between; gap: 24px; padding-block: 26px; cursor: pointer; }
+  summary::-webkit-details-marker { display: none; }
+  summary h3 { font-size: clamp(1.15rem, 1.7vw, 1.6rem); max-width: 34ch; }
+  .faq-icon { flex: none; width: 22px; height: 22px; position: relative; margin-top: 6px; }
+  .faq-icon::before, .faq-icon::after { content: ''; position: absolute; left: 0; right: 0; top: 50%; height: 1.5px; background: currentColor; transition: transform 0.5s var(--ease); }
+  .faq-icon::after { transform: rotate(90deg); }
+  details[open] .faq-icon::after { transform: rotate(0); }
+  details p { padding-bottom: 28px; max-width: 62ch; }
+</style>

@@ -1,0 +1,66 @@
+---
+import Base from '@/layouts/Base.astro';
+import Figure from '@/components/Figure.astro';
+import Breadcrumbs from '@/components/Breadcrumbs.astro';
+import { site, startHere } from '@/data/site';
+import { breadcrumbLd } from '@/lib/ld';
+const crumbs = [{ name: 'Inicio', href: '/' }, { name: 'Contacto', href: '/contacto/' }];
+const description = 'Agende una reunión corta con Gen.Health para conocer a su asociación, IPS o compañía farmacéutica y recibir una propuesta a la medida.';
+const jsonLd = [
+  breadcrumbLd(crumbs, Astro.site!),
+  { '@context': 'https://schema.org', '@type': 'ContactPage', name: 'Contacto Gen.Health', url: new URL('/contacto/', Astro.site).href, about: { '@id': new URL('/#organizacion', Astro.site).href } },
+];
+const mail = `mailto:${site.contact.email}?subject=${encodeURIComponent('Reunión con Gen.Health')}`;
+---
+<Base title="Contacto: agende una reunión" description={description} jsonLd={jsonLd} headerTone="dark">
+  <section class="ct theme-dark">
+    <div class="ct-fig" aria-hidden="true"><Figure kind="rose" number="∞" spin /></div>
+    <div class="wrap ct-in">
+      <Breadcrumbs items={crumbs} />
+      <p class="annot">Lámina final · Contacto</p>
+      <h1 class="t-mega" data-split="chars">Hablemos<span class="spark">.</span></h1>
+      <p class="t-lead soft">Será un gusto conocer a su organización y escuchar lo que necesita. Una reunión corta y después una propuesta a su medida.</p>
+
+      <div class="ct-cards">
+        <a class="ct-card" href={mail} data-cursor="Escribir">
+          <span class="t-mono accent">Correo</span>
+          <span class="ct-big">{site.contact.email}</span>
+        </a>
+        <a class="ct-card" href={site.contact.whatsapp} target="_blank" rel="noopener" data-cursor="WhatsApp">
+          <span class="t-mono accent">WhatsApp y teléfono</span>
+          <span class="ct-big">{site.contact.phone}</span>
+        </a>
+      </div>
+      <address class="ct-person">
+        <span class="t-h3">{site.contact.person}</span>
+        <span class="soft">{site.contact.role} · Gen.Health</span>
+      </address>
+
+      <div class="ct-needs">
+        <p class="t-mono soft">Si ya sabe qué le interesa, cuéntenos en el correo:</p>
+        <ul>
+          {startHere.map((s) => (
+            <li><a class="chip" href={`${mail}&body=${encodeURIComponent(`Hola, nos interesa: ${s.need}.`)}`}><i></i>{s.answer}</a></li>
+          ))}
+        </ul>
+      </div>
+    </div>
+  </section>
+</Base>
+<style>
+  .ct { position: relative; overflow: hidden; min-height: 100svh; padding: calc(var(--header-h) + 32px) 0 clamp(60px, 8vw, 120px); }
+  .ct-fig { position: absolute; right: -20vw; top: 10vh; width: min(110vw, 900px); opacity: 0.4; pointer-events: none; }
+  @media (min-width: 1000px) { .ct-fig { right: -4vw; opacity: 0.7; width: 56vw; } }
+  .ct-in { position: relative; display: grid; gap: 28px; }
+  .ct-in .t-mega { margin-top: 6vh; margin-left: -0.04em; }
+  .ct-cards { display: grid; gap: 16px; margin-top: 16px; }
+  @media (min-width: 900px) { .ct-cards { grid-template-columns: 1fr 1fr; max-width: 1200px; } }
+  .ct-card { display: grid; gap: 14px; padding: 26px; border-radius: 6px; box-shadow: inset 0 0 0 1px var(--rule); background: rgba(11, 34, 25, 0.6); backdrop-filter: blur(6px); transition: background-color 0.4s, color 0.4s; }
+  .ct-card:hover { background: var(--chloro); color: var(--ink); }
+  .ct-card:hover .t-mono { color: var(--ink); }
+  .ct-big { font-weight: 720; font-size: clamp(1.25rem, 2.6vw, 2.4rem); letter-spacing: -0.04em; overflow-wrap: anywhere; }
+  .ct-person { font-style: normal; display: grid; gap: 4px; }
+  .ct-needs { display: grid; gap: 14px; max-width: 1100px; }
+  .ct-needs ul { display: flex; flex-wrap: wrap; gap: 8px; }
+  .ct-needs .chip:hover { background: var(--chloro); color: var(--ink); }
+</style>

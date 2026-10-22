@@ -1,0 +1,40 @@
+---
+import type { Product } from '@/data/catalog';
+import { productUrl } from '@/data/catalog';
+import Figure from '@/components/Figure.astro';
+interface Props { product: Product; index: number }
+const { product: p, index } = Astro.props;
+---
+<a href={productUrl(p)} class="pcard" data-reveal data-cursor="Ver lámina">
+  <div class="pcard-top">
+    <span class="t-mono soft">{String(index + 1).padStart(2, '0')}</span>
+    <span class="chip" data-status={p.status}><i></i>{p.status}</span>
+  </div>
+  <div class="pcard-fig"><Figure kind={p.figure} annotate={false} draw={false} /></div>
+  <div class="pcard-body">
+    <p class="t-mono accent">{p.kicker}</p>
+    <h3 class="pcard-name">{p.name}</h3>
+    <p class="t-body">{p.description}</p>
+  </div>
+  <span class="pcard-arrow" aria-hidden="true">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M5 19L19 5M8 5h11v11" /></svg>
+  </span>
+</a>
+<style>
+  .pcard {
+    position: relative; display: grid; gap: 22px; align-content: start;
+    padding: 22px; border-radius: 6px; min-height: 100%;
+    box-shadow: inset 0 0 0 1px var(--rule);
+    transition: background-color 0.5s var(--ease), color 0.5s var(--ease);
+    overflow: hidden;
+  }
+  .pcard:hover { background: var(--ink); color: #e9eedd; --fg: #e9eedd; --fg-soft: #a9bba6; --construct: #b99a6f; --accent: var(--chloro); }
+  .pcard-top { display: flex; justify-content: space-between; align-items: center; }
+  .pcard-fig { width: 62%; margin-inline: auto; aspect-ratio: 1; transition: transform 1.2s var(--ease); }
+  .pcard:hover .pcard-fig { transform: rotate(30deg) scale(1.06); }
+  .pcard-body { display: grid; gap: 10px; }
+  .pcard-name { font-weight: 740; font-size: clamp(1.6rem, 2.4vw, 2.3rem); letter-spacing: -0.045em; line-height: 0.98; }
+  .pcard-arrow { position: absolute; right: 22px; bottom: 22px; width: 28px; height: 28px; transition: transform 0.5s var(--ease); }
+  .pcard:hover .pcard-arrow { transform: translate(4px, -4px); color: var(--chloro); }
+  .pcard .t-body { padding-right: 36px; }
+</style>

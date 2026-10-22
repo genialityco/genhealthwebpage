@@ -1,0 +1,19 @@
+---
+interface Props { annot: string; title: string; lead?: string; id?: string }
+const { annot, title, lead, id } = Astro.props;
+---
+<header class="shead grid">
+  <p class="annot shead-annot">{annot}</p>
+  <h2 class="t-h2 shead-title" id={id} data-split set:html={title} />
+  {lead && <p class="t-lead shead-lead soft" data-reveal>{lead}</p>}
+</header>
+<style>
+  .shead { margin-bottom: clamp(40px, 6vw, 88px); align-items: end; }
+  .shead-annot { grid-column: 1 / -1; }
+  .shead-title { grid-column: 1 / -1; }
+  .shead-lead { grid-column: 1 / -1; }
+  @media (min-width: 1000px) {
+    .shead-title { grid-column: 1 / span 8; }
+    .shead-lead { grid-column: 9 / -1; }
+  }
+</style>

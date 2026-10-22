@@ -1,0 +1,60 @@
+---
+import Base from '@/layouts/Base.astro';
+import PageHero from '@/components/PageHero.astro';
+import BlobImage from '@/components/BlobImage.astro';
+import SectionHead from '@/components/SectionHead.astro';
+import CtaBand from '@/components/CtaBand.astro';
+import Figure from '@/components/Figure.astro';
+import { team, principles } from '@/data/site';
+import { gallery } from '@/data/catalog';
+import { breadcrumbLd } from '@/lib/ld';
+const crumbs = [{ name: 'Inicio', href: '/' }, { name: 'Nosotros', href: '/nosotros/' }];
+const description = 'Gen.Health es la línea de salud de Geniality: comunicadoras en salud, creativos, analistas e ingenieros al lado de asociaciones médicas y congresos.';
+---
+<Base title="Nosotros: un equipo que entiende de salud y de tecnología" description={description} jsonLd={[breadcrumbLd(crumbs, Astro.site!)]} headerTone="dark">
+  <PageHero crumbs={crumbs} kicker="Quiénes somos" index="07" name="Nosotros" title="Un equipo que entiende de salud y de tecnología" lead="Somos la línea de salud de Geniality. Llevamos años al lado de asociaciones médicas, colegios profesionales y congresos, y conocemos el esfuerzo que hay detrás de cada evento, cada curso y cada guía. Nuestro trabajo es que ese esfuerzo llegue más lejos." figure="flower" />
+
+  <section class="section">
+    <div class="wrap grid">
+      <div class="tm-img"><BlobImage src={gallery.salaPosters} alt="Médicos conversando frente a los pósters digitales del congreso de ACHO" caption="Lo que más disfrutamos: ver a los médicos conversar sobre su propia investigación. ACHO, 2024." ratio="4 / 5" seed={6} /></div>
+      <div class="tm-text">
+        <p class="annot">El taller</p>
+        <h2 class="t-h2" data-split>Salud, creatividad, datos y tecnología <span class="serif-em accent">en un solo equipo</span></h2>
+        <ol class="tm-list">
+          {team.map((t, i) => <li data-reveal><span class="t-mono accent">{String(i + 1).padStart(2, '0')}</span>{t}</li>)}
+        </ol>
+      </div>
+    </div>
+  </section>
+
+  <section class="section theme-dark">
+    <div class="wrap">
+      <SectionHead annot="Manifiesto" title="Vender conexiones, no metros. <span class='serif-em accent'>Crear significado, no alquilar espacios.</span>" lead="Ofrecer impacto medible, no visibilidad. Combinamos IA, ciencia del aprendizaje y creatividad para fortalecer la educación médica sin comprometer la neutralidad ni la calidad científica." />
+      <div class="man-fig" aria-hidden="true"><Figure kind="harmonograph" number="07" seed={21} /></div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="wrap">
+      <SectionHead annot="Lo que siempre cuidamos" title="Principios de <span class='serif-em accent'>trabajo</span>" />
+      <ol class="pr-grid">
+        {principles.map((p, i) => (
+          <li class="pr" data-reveal><span class="pr-n">{i + 1}</span><h3 class="t-h3">{p.title}</h3><p class="t-body">{p.text}</p></li>
+        ))}
+      </ol>
+    </div>
+  </section>
+  <CtaBand />
+</Base>
+<style>
+  .tm-img { grid-column: 1 / -1; }
+  .tm-text { grid-column: 1 / -1; display: grid; gap: 24px; align-content: center; }
+  @media (min-width: 1000px) { .tm-img { grid-column: 1 / span 5; } .tm-text { grid-column: 7 / -1; } }
+  .tm-list li { display: flex; gap: 18px; align-items: baseline; padding-block: 18px; border-top: 1px solid var(--rule); font-weight: 640; font-size: clamp(1.2rem, 2vw, 1.7rem); letter-spacing: -0.03em; line-height: 1.15; }
+  .man-fig { width: min(90vw, 620px); margin-inline: auto; }
+  .pr-grid { display: grid; gap: 0 24px; border-bottom: 1px solid var(--rule); }
+  @media (min-width: 700px) { .pr-grid { grid-template-columns: repeat(2, 1fr); } }
+  @media (min-width: 1100px) { .pr-grid { grid-template-columns: repeat(5, 1fr); } }
+  .pr { display: grid; gap: 12px; align-content: start; padding-block: 24px 36px; border-top: 1px solid var(--rule); }
+  .pr-n { font-family: var(--f-serif); font-style: italic; font-size: 3.4rem; line-height: 1; color: var(--leaf); }
+</style>

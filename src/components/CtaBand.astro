@@ -1,0 +1,22 @@
+---
+interface Props { title?: string; text?: string }
+const { title = '¿Le llama la atención?', text = 'Con gusto se lo mostramos en una reunión corta y le enviamos una propuesta a la medida de su organización.' } = Astro.props;
+---
+<section class="ctab theme-moss">
+  <div class="wrap ctab-in">
+    <h2 class="t-display" data-split>{title}</h2>
+    <div class="ctab-side">
+      <p class="t-lead">{text}</p>
+      <a class="btn" href="/contacto/" data-magnetic>
+        Hablemos
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" /></svg>
+      </a>
+    </div>
+  </div>
+</section>
+<style>
+  .ctab { padding-block: clamp(72px, 10vw, 160px); }
+  .ctab-in { display: grid; gap: 32px; }
+  .ctab-side { display: grid; gap: 24px; justify-items: start; }
+  @media (min-width: 1000px) { .ctab-in { grid-template-columns: 1.5fr 1fr; align-items: end; } }
+</style>
